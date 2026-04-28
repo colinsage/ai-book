@@ -1,0 +1,53 @@
+---
+title: 监督学习
+sidebar_position: 2
+---
+
+# 监督学习
+
+监督学习（Supervised Learning）是最常见的机器学习范式，模型从带有标签的训练数据中学习输入到输出的映射关系。
+
+## 核心概念
+
+### 分类 vs 回归
+
+- **分类（Classification）**：输出为离散类别，如垃圾邮件检测、图像识别
+- **回归（Regression）**：输出为连续值，如房价预测、温度预报
+
+## 经典算法
+
+### 线性模型
+
+```python
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+```
+
+### 决策树与随机森林
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(n_estimators=100, max_depth=5)
+model.fit(X_train, y_train)
+```
+
+### 支持向量机（SVM）
+
+SVM 通过寻找最大间隔超平面来分隔不同类别的数据，在高维空间中表现优异。
+
+## 过拟合与欠拟合
+
+- **过拟合**：模型在训练集上表现很好，但在测试集上表现差 → 增加数据、正则化、简化模型
+- **欠拟合**：模型在训练集和测试集上都不好 → 增加特征、使用更复杂的模型
+
+## 偏差-方差权衡
+
+模型的泛化误差可以分解为：
+
+Error = Bias² + Variance + Noise
+
+好的模型需要在偏差和方差之间找到平衡点。

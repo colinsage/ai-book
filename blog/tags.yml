@@ -1,19 +1,15 @@
-facebook:
-  label: Facebook
-  permalink: /facebook
-  description: Facebook tag description
-
-hello:
-  label: Hello
-  permalink: /hello
-  description: Hello tag description
-
-docusaurus:
-  label: Docusaurus
-  permalink: /docusaurus
-  description: Docusaurus tag description
-
-hola:
-  label: Hola
-  permalink: /hola
-  description: Hola tag description
+公告:
+  label: 公告
+  description: AI Book 相关公告与更新
+技术解读:
+  label: 技术解读
+  description: 最新 AI 技术的深入分析
+实践分享:
+  label: 实践分享
+  description: AI 应用开发实践经验
+模型评测:
+  label: 模型评测
+  description: 大语言模型能力评估与对比
+行业观察:
+  label: 行业观察
+  description: AI 行业趋势与生态发展

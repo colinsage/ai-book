@@ -1,0 +1,89 @@
+---
+title: Few-shot Learning
+sidebar_position: 4
+---
+
+# Few-shot Learning
+
+Few-shot Learning 是通过在提示中提供少量示例，让模型快速学习新任务的技术。
+
+## 原理
+
+大语言模型在预训练中积累了丰富的知识，Few-shot 通过示例激活相关知识，引导模型按期望的模式输出。
+
+## 示例数量
+
+| 类型 | 示例数 | 适用场景 |
+|------|--------|---------|
+| Zero-shot | 0 | 简单任务，模型已具备能力 |
+| One-shot | 1 | 格式化任务 |
+| Few-shot | 2-5 | 复杂模式学习 |
+| Many-shot | 5+ | 高精度需求（受上下文窗口限制） |
+
+## 示例选择策略
+
+### 随机选择
+
+最简单，但效果不稳定。
+
+### 相似度选择
+
+选择与当前输入最相似的示例：
+
+```python
+from sentence_transformers import SentenceTransformer
+import numpy as np
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+def select_examples(query, examples, k=3):
+    query_emb = model.encode(query)
+    example_embs = model.encode([e['input'] for e in examples])
+    similarities = np.dot(example_embs, query_emb)
+    top_k = np.argsort(similarities)[-k:]
+    return [examples[i] for i in top_k]
+```
+
+### 多样性选择
+
+确保示例覆盖不同的模式类型，避免模型过度偏向某一模式。
+
+## 示例顺序
+
+示例的顺序会影响输出：
+
+- **稳定排序**：相似的示例放在一起
+- **随机排列**：多次调用取平均
+- **难度递增**：从简单到复杂排列
+
+## 格式设计
+
+### 输入-输出格式
+
+```
+输入：今天天气真好 → 输出：😊☀️
+输入：下雨了，出门要带伞 → 输出：🌧️🌂
+输入：考试终于结束了 →
+```
+
+### 对话格式
+
+```
+用户：帮我写一个 Python 函数计算斐波那契数列
+助手：```python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+```
+
+用户：写一个归并排序
+助手：
+```
+
+## 注意事项
+
+- 示例应与目标任务一致
+- 标签必须正确，错误示例会误导模型
+- 示例过多可能超出上下文窗口
+- 格式一致性比内容更重要

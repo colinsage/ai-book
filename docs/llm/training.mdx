@@ -1,0 +1,75 @@
+---
+title: 预训练与微调
+sidebar_position: 3
+---
+
+# 预训练与微调
+
+大语言模型的训练通常分为预训练和微调两个阶段，每个阶段有不同的目标和方法。
+
+## 预训练（Pre-training）
+
+预训练是让模型在海量无标注文本上学习语言的通用规律。
+
+### 训练目标
+
+**下一个 Token 预测（Next Token Prediction）**：
+
+L = -Σ(t=1..T) log P(x_t \| x&lt;t ; θ)
+
+这是自回归语言模型的标准训练目标，GPT 系列均采用此方式。
+
+### 数据准备
+
+- **数据规模**：通常为 TB 级别的文本
+- **数据来源**：网页（Common Crawl）、书籍、代码、论文
+- **数据清洗**：去重、过滤低质量内容、去除敏感信息
+
+### 训练基础设施
+
+- **硬件**：数千张 GPU/TPU，如 A100/H100 集群
+- **并行策略**：数据并行、张量并行、流水线并行
+- **混合精度训练**：BF16/FP16 加速
+
+## 微调（Fine-tuning）
+
+微调让预训练模型适应特定任务或领域。
+
+### 全参数微调
+
+更新模型的所有参数，效果最好但成本最高。
+
+### 参数高效微调（PEFT）
+
+只更新少量参数，大幅降低训练成本：
+
+#### LoRA
+
+低秩适配（Low-Rank Adaptation）通过在权重矩阵旁添加低秩分解来减少可训练参数：
+
+W' = W + ΔW = W + BA
+
+其中 B ∈ ℝ^(d×r)，A ∈ ℝ^(r×d)，r ≪ d。
+
+```python
+from peft import LoraConfig, get_peft_model
+
+config = LoraConfig(
+    r=8,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
+    task_type="CAUSAL_LM",
+)
+model = get_peft_model(base_model, config)
+```
+
+#### QLoRA
+
+在 LoRA 基础上，将基座模型 4-bit 量化，进一步降低显存需求，单卡即可微调 65B 模型。
+
+### RLHF / DPO
+
+通过人类反馈来对齐模型输出：
+
+- **RLHF**：训练奖励模型 + PPO 优化
+- **DPO**：直接偏好优化，无需奖励模型，更简单高效

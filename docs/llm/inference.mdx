@@ -1,0 +1,59 @@
+---
+title: 推理优化
+sidebar_position: 4
+---
+
+# 推理优化
+
+大语言模型的推理成本是实际应用中的关键挑战。本章介绍主流的推理优化技术。
+
+## KV Cache
+
+KV Cache 缓存已计算的 Key 和 Value 向量，避免自回归生成时的重复计算：
+
+| 优化 | 原理 | 效果 |
+|------|------|------|
+| KV Cache | 缓存历史 KV | 避免重复计算 |
+| MQA | 多头共享 Key/Value | 减少显存占用 |
+| GQA | 分组共享 KV | 平衡效果与效率 |
+
+## 量化（Quantization）
+
+通过降低模型参数的精度来减少显存和加速推理：
+
+### INT8 量化
+
+将 FP16 权重压缩为 INT8，显存减半，推理速度提升。
+
+### INT4 量化（GPTQ / AWQ）
+
+```python
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b", quantization_config=config)
+```
+
+4-bit 量化可以在极小的精度损失下，将 7B 模型的显存需求从 14GB 降至约 4GB。
+
+## 推理框架
+
+| 框架 | 特点 | 适用场景 |
+|------|------|---------|
+| vLLM | PagedAttention，高吞吐 | 生产部署 |
+| TensorRT-LLM | NVIDIA 优化，极致性能 | GPU 集群 |
+| llama.cpp | CPU/混合推理 | 本地部署 |
+| Ollama | 开箱即用 | 个人开发 |
+
+## 投机解码（Speculative Decoding）
+
+使用小模型快速生成候选 token，大模型并行验证，在不降低质量的前提下加速推理。
+
+## 批处理优化
+
+- **连续批处理（Continuous Batching）**：动态管理请求，提高 GPU 利用率
+- **前缀缓存（Prefix Caching）**：复用共享的系统提示词 KV Cache
