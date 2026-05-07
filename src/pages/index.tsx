@@ -20,8 +20,23 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/">
-            开始阅读
+            to="/docs/llm/overview">
+            大语言模型
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/llama-cpp/index">
+            Llama.cpp 实现原理
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/sglang/index">
+            SGLang 实现原理
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/vllm/index">
+            vLLM 实现原理
           </Link>
         </div>
       </div>
@@ -34,7 +49,7 @@ export default function Home(): ReactNode {
   return (
     <Layout
       title={`欢迎来到 ${siteConfig.title}`}
-      description="从基础到实践，系统掌握人工智能 — 涵盖机器学习、大语言模型、提示工程与AI应用开发">
+      description="从基础到实践，系统掌握人工智能 — 涵盖大语言模型原理、提示工程、AI应用开发与LLM推理引擎源码分析">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

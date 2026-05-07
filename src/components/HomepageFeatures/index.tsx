@@ -13,46 +13,42 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: '机器学习基础',
+    title: '模型原理',
     icon: '🧠',
-    to: '/docs/ml-basics/overview',
+    to: '/docs/llm/architecture',
     description: (
       <>
-        系统学习监督学习、无监督学习、模型评估与特征工程等核心概念，构建扎实的
-        AI 基础。
+        深入理解 Transformer 架构、自注意力机制、位置编码，以及仅解码器架构的设计思想。
       </>
     ),
   },
   {
-    title: '大语言模型',
+    title: '训练与推理',
     icon: '🤖',
-    to: '/docs/llm/overview',
+    to: '/docs/llm/training',
     description: (
       <>
-        深入理解 Transformer 架构、预训练与微调、推理优化，以及
-        GPT、LLaMA 等主流模型的原理与应用。
+        掌握预训练与微调流程、LoRA/QLoRA 高效微调、RLHF 对齐，以及量化与推理加速技术。
       </>
     ),
   },
   {
     title: '提示工程',
     icon: '✨',
-    to: '/docs/prompt-engineering/overview',
+    to: '/docs/llm/prompt-engineering',
     description: (
       <>
-        掌握 Chain-of-Thought、Few-shot
-        Learning、Agent 提示模式等高级技巧，充分发挥大模型能力。
+        掌握 Zero-shot、Few-shot、Chain-of-Thought 等核心技巧，充分发挥大模型能力。
       </>
     ),
   },
   {
-    title: 'AI 应用开发',
+    title: '应用开发',
     icon: '🚀',
-    to: '/docs/ai-application/overview',
+    to: '/docs/llm/rag',
     description: (
       <>
-        实战 RAG 检索增强生成、LangChain 框架、AI Agent
-        开发，以及主流工具与生态的快速上手。
+        实战 RAG 检索增强生成、AI Agent 开发、LangChain 框架，快速构建 AI 应用。
       </>
     ),
   },

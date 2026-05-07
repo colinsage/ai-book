@@ -67,26 +67,26 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'mlBasicsSidebar',
-          label: '机器学习基础',
-          position: 'left',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'llmSidebar',
           label: '大语言模型',
           position: 'left',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'promptSidebar',
-          label: '提示工程',
+          sidebarId: 'llamacppSidebar',
+          label: 'Llama.cpp实现原理',
           position: 'left',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'aiAppSidebar',
-          label: 'AI 应用开发',
+          sidebarId: 'sglangSidebar',
+          label: 'SGLang实现原理',
+          position: 'left',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'vllmSidebar',
+          label: 'vLLM实现原理',
           position: 'left',
         },
         {to: '/blog', label: 'AI 动态', position: 'left'},
@@ -103,19 +103,20 @@ const config: Config = {
           title: '知识库',
           items: [
             {
-              label: '机器学习基础',
-              to: '/docs/ml-basics/overview',            },
-            {
               label: '大语言模型',
               to: '/docs/llm/overview',
             },
             {
-              label: '提示工程',
-              to: '/docs/prompt-engineering/overview',
+              label: 'Llama.cpp实现原理',
+              to: '/docs/llama-cpp/index',
             },
             {
-              label: 'AI 应用开发',
-              to: '/docs/ai-application/overview',
+              label: 'SGLang实现原理',
+              to: '/docs/sglang/index',
+            },
+            {
+              label: 'vLLM实现原理',
+              to: '/docs/vllm/index',
             },
           ],
         },

@@ -1,0 +1,190 @@
+---
+title: 应用开发框架
+sidebar_position: 9
+---
+
+# 应用开发框架
+
+LLM 应用开发有丰富的工具和框架生态，本章介绍主流的开发框架、模型部署方案和评估工具。
+
+## 模型接入
+
+### 云端 API
+
+| 服务 | 模型 | 特点 | 定价 |
+|------|------|------|------|
+| OpenAI | GPT-4o / o1 | 综合能力最强 | 按 token 计费 |
+| Anthropic | Claude 3.5 | 长上下文、安全 | 按 token 计费 |
+| Google | Gemini | 多模态、生态整合 | 按 token 计费 |
+| 国内厂商 | Qwen/DeepSeek/GLM | 中文能力强、合规 | 按 token 计费 |
+
+### 开源模型部署
+
+| 工具 | 特点 | 适用场景 |
+|------|------|---------|
+| vLLM | 高吞吐、PagedAttention | 生产环境 |
+| Ollama | 开箱即用 | 本地开发 |
+| llama.cpp | CPU 友好 | 资源受限环境 |
+| Hugging Face TGI | 官方推理引擎 | 灵活部署 |
+
+## LangChain
+
+LangChain 是最流行的 LLM 应用开发框架，提供模块化组件和丰富集成。
+
+### 核心模块
+
+| 模块 | 功能 |
+|------|------|
+| Model I/O | Prompts / LLMs / Output Parsers |
+| Retrieval | Document Loaders / Splitters / Embeddings / Vector Stores |
+| Chains | 组件串联与编排 |
+| Agents | 工具调用与自主决策 |
+| Memory | 对话记忆管理 |
+
+### 快速开始
+
+```bash
+pip install langchain langchain-openai langchain-community
+```
+
+```python
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "你是一个 {role}，用中文回答问题。"),
+    ("human", "{input}"),
+])
+
+chain = prompt | llm | StrOutputParser()
+
+response = chain.invoke({"role": "AI 教程作者", "input": "什么是 RAG？"})
+```
+
+### LCEL（LangChain Expression Language）
+
+LCEL 使用 `|` 操作符将组件串联成链：
+
+```python
+chain = prompt | llm | output_parser
+```
+
+并行执行与流式输出：
+
+```python
+from langchain_core.runnables import RunnableParallel
+
+chain = RunnableParallel({
+    "joke": joke_chain,
+    "poem": poem_chain,
+})
+
+for chunk in chain.stream({"input": "你好"}):
+    print(chunk, end="", flush=True)
+```
+
+### 工具与 Agent
+
+```python
+from langchain_core.tools import tool
+
+@tool
+def search_web(query: str) -> str:
+    """搜索网页获取信息"""
+    return search_engine.search(query)
+
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+
+agent = create_tool_calling_agent(llm, [search_web], prompt)
+agent_executor = AgentExecutor(agent=agent, tools=[search_web])
+
+result = agent_executor.invoke({"input": "北京今天的天气如何？"})
+```
+
+### LangGraph
+
+LangGraph 是 LangChain 的扩展，用于构建有状态的、多角色的 AI 应用，支持循环、分支和持久化状态：
+
+```python
+from langgraph.graph import StateGraph, END
+
+workflow = StateGraph(AgentState)
+workflow.add_node("think", think_node)
+workflow.add_node("act", act_node)
+workflow.add_node("observe", observe_node)
+
+workflow.add_edge("think", "act")
+workflow.add_edge("act", "observe")
+workflow.add_conditional_edges("observe", should_continue, {
+    True: "think", False: END,
+})
+```
+
+## 向量数据库
+
+| 数据库 | 类型 | 特点 |
+|--------|------|------|
+| Chroma | 嵌入式 | 轻量，适合开发 |
+| FAISS | 内存库 | Meta 开源，高性能 |
+| Pinecone | 云服务 | 全托管，易扩展 |
+| Milvus | 分布式 | 大规模生产环境 |
+| Qdrant | Rust 实现 | 高性能，过滤查询 |
+| Weaviate | 全功能 | 混合搜索 |
+
+## 其他开发框架
+
+| 框架 | 语言 | 特点 |
+|------|------|------|
+| LlamaIndex | Python | 专注数据索引与检索 |
+| CrewAI | Python | Multi-Agent 框架 |
+| AutoGen | Python | 微软开源，多 Agent 对话 |
+| Semantic Kernel | C#/Python/Java | 微软企业级框架 |
+| Dify | - | 低代码 AI 应用平台 |
+
+## 可观测性与评估
+
+### LangSmith
+
+LangChain 官方的可观测性平台，开启后所有链的执行自动被追踪：
+
+```python
+import os
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = "your-api-key"
+```
+
+其他工具：**Langfuse**（开源）、**Phoenix (Arize)**、**Weights & Biases Weave**
+
+### 评估框架
+
+**RAGAS** — RAG 系统自动化评估：
+
+```python
+from ragas import evaluate
+from ragas.metrics import faithfulness, answer_relevancy
+
+result = evaluate(
+    dataset=eval_dataset,
+    metrics=[faithfulness, answer_relevancy],
+)
+```
+
+**DeepEval** — 单元测试风格的 LLM 评估：
+
+```python
+from deepeval import assert_test
+from deepeval.metrics import HallucinationMetric
+
+metric = HallucinationMetric(threshold=0.5)
+assert_test(test_case, [metric])
+```
+
+## 学习资源
+
+- [LangChain 文档](https://python.langchain.com/)
+- [LlamaIndex 文档](https://docs.llamaindex.ai/)
+- [OpenAI Cookbook](https://cookbook.openai.com/)
+- [Hugging Face Course](https://huggingface.co/learn)

@@ -1,9 +1,5 @@
 # llama.cpp — 概述与架构
 
-**生成日期：** 2026-04-28
-**仓库：** /home/colin/amuse/cpp/llama.cpp
-**提交：** bd28a2e7200e7e8a77bd23a82dd7afb2ccca37af
-
 ## 1.1 项目分类
 
 **混合型** — llama.cpp 是一个用于 LLM 推理的 C/C++ 库（`libllama`），包含两个主要的可执行封装：

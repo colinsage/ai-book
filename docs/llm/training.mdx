@@ -5,7 +5,7 @@ sidebar_position: 3
 
 # 预训练与微调
 
-大语言模型的训练通常分为预训练和微调两个阶段，每个阶段有不同的目标和方法。
+大语言模型的训练通常分为预训练和微调两个阶段，每个阶段有不同的目标和方法。理解训练流程也离不开模型评估和数据处理的通用知识。
 
 ## 预训练（Pre-training）
 
@@ -15,7 +15,7 @@ sidebar_position: 3
 
 **下一个 Token 预测（Next Token Prediction）**：
 
-L = -Σ(t=1..T) log P(x_t \| x&lt;t ; θ)
+L = -Σ(t=1..T) log P(x_t | x&lt;t ; θ)
 
 这是自回归语言模型的标准训练目标，GPT 系列均采用此方式。
 
@@ -24,6 +24,8 @@ L = -Σ(t=1..T) log P(x_t \| x&lt;t ; θ)
 - **数据规模**：通常为 TB 级别的文本
 - **数据来源**：网页（Common Crawl）、书籍、代码、论文
 - **数据清洗**：去重、过滤低质量内容、去除敏感信息
+
+LLM 的数据准备过程本质上是大规模的特征工程：如何从海量原始数据中筛选高质量文本、构建合理的分词方案、设计数据配比，直接决定了模型的上限。
 
 ### 训练基础设施
 
@@ -73,3 +75,48 @@ model = get_peft_model(base_model, config)
 
 - **RLHF**：训练奖励模型 + PPO 优化
 - **DPO**：直接偏好优化，无需奖励模型，更简单高效
+
+## 模型评估
+
+模型评估贯穿 LLM 训练的全过程，从预训练的 loss 监控到微调后的能力评测。
+
+### 通用评估方法
+
+| 阶段 | 评估方式 | 关键指标 |
+|------|---------|---------|
+| 预训练 | 验证集 loss / 困惑度 | Perplexity |
+| SFT | 人工评估 / 自动指标 | 准确率、BLEU、ROUGE |
+| RLHF | 奖励模型得分 | 奖励值、胜率 |
+| 最终 | Benchmark | MMLU、HumanEval、MT-Bench |
+
+### 经典评估概念
+
+- **交叉验证**：K 折交叉验证能更充分地利用有限数据
+- **超参数调优**：学习率、batch size、LoRA rank 等都需系统性搜索
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {'C': [0.1, 1, 10], 'kernel': ['linear', 'rbf']}
+grid_search = GridSearchCV(SVC(), param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+```
+
+### LLM 评估基准
+
+| 基准 | 评测能力 |
+|------|---------|
+| MMLU | 多学科知识 |
+| HumanEval | 代码生成 |
+| GSM8K | 数学推理 |
+| MT-Bench | 多轮对话 |
+| AlpacaEval | 指令遵循 |
+
+## 数据与特征
+
+LLM 训练中的数据工程是特征工程在大规模场景的体现：
+
+- **数据清洗** = 特征质量保障：去重、过滤、质量打分
+- **分词（Tokenization）** = 特征编码：BPE / SentencePiece 将文本转为模型可处理的序列
+- **数据配比** = 特征选择：不同领域数据的混合比例影响模型能力分布
+- **指令数据构造** = 特征构造：SFT 数据的格式设计和质量决定微调效果
