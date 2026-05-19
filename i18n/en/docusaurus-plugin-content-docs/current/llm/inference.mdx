@@ -1,0 +1,59 @@
+---
+title: Inference Optimization
+sidebar_position: 5
+---
+
+# Inference Optimization
+
+The inference cost of large language models is a key challenge in real-world applications. This chapter introduces mainstream inference optimization techniques.
+
+## KV Cache
+
+KV Cache caches previously computed Key and Value vectors, avoiding redundant computation during autoregressive generation:
+
+| Optimization | Principle | Effect |
+|------|------|------|
+| KV Cache | Cache historical KV | Avoid redundant computation |
+| MQA | Multi-head shared Key/Value | Reduce VRAM usage |
+| GQA | Grouped shared KV | Balance performance and efficiency |
+
+## Quantization
+
+Reducing model parameter precision to decrease VRAM and accelerate inference:
+
+### INT8 Quantization
+
+Compress FP16 weights to INT8; halves VRAM and speeds up inference.
+
+### INT4 Quantization (GPTQ / AWQ)
+
+```python
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b", quantization_config=config)
+```
+
+4-bit quantization can reduce the VRAM requirement of a 7B model from 14GB to approximately 4GB with minimal accuracy loss.
+
+## Inference Frameworks
+
+| Framework | Highlights | Use Cases |
+|------|------|---------|
+| vLLM | PagedAttention, high throughput | Production deployment |
+| TensorRT-LLM | NVIDIA optimized, peak performance | GPU clusters |
+| llama.cpp | CPU/hybrid inference | Local deployment |
+| Ollama | Out-of-the-box | Personal development |
+
+## Speculative Decoding
+
+Uses a small model to quickly generate candidate tokens, with a large model verifying in parallel — accelerating inference without sacrificing quality.
+
+## Batching Optimizations
+
+- **Continuous Batching**: Dynamically manages requests, improving GPU utilization
+- **Prefix Caching**: Reuses shared system prompt KV Cache

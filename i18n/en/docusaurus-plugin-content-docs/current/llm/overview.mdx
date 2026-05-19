@@ -1,0 +1,81 @@
+---
+title: Overview
+sidebar_position: 1
+---
+
+# Large Language Models Overview
+
+Large Language Models (LLMs) are neural network models based on the Transformer architecture, pre-trained on massive amounts of text, with powerful text understanding and generation capabilities. Understanding LLMs requires some foundational machine learning concepts first.
+
+## Machine Learning Basics
+
+Machine learning is a core subfield of AI that aims to let computers automatically learn patterns from data without explicit programming.
+
+### Learning Paradigms
+
+| Paradigm | Requires Labels | Typical Tasks | Representative Algorithms |
+|------|------------|---------|---------|
+| Supervised Learning | Yes | Classification, Regression | SVM, Decision Trees, Neural Networks |
+| Unsupervised Learning | No | Clustering, Dimensionality Reduction | K-Means, PCA, Autoencoders |
+| Semi-supervised Learning | Partial | Label Propagation | Label Propagation, Self-training |
+| Reinforcement Learning | Reward Signal | Sequential Decision Making | Q-Learning, PPO |
+
+### Core Concepts
+
+- **Overfitting & Underfitting**: Overfitting means the model performs well on training data but generalizes poorly; underfitting means the model cannot even learn the training data well
+- **Bias-Variance Tradeoff**: Generalization error = Bias² + Variance + Noise; a good model needs to balance both
+- **Model Evaluation**: Classification uses precision/recall/F1, regression uses MSE/R², cross-validation makes better use of limited data
+- **Feature Engineering**: Transforming raw data into features more suitable for the model, including standardization, encoding, feature selection, etc.
+
+> An LLM is essentially a machine learning model, just at a larger scale and with more complex architecture. The above concepts apply equally: pre-training is unsupervised learning, SFT is supervised learning, and RLHF is reinforcement learning.
+
+## LLM Development Timeline
+
+| Year | Milestone |
+|------|--------|
+| 2017 | Transformer architecture proposed |
+| 2018 | GPT-1 / BERT released |
+| 2019 | GPT-2 demonstrates zero-shot capabilities |
+| 2020 | GPT-3 with 175B parameters |
+| 2022 | ChatGPT ignites the AI revolution |
+| 2023 | GPT-4 / LLaMA / Mistral |
+| 2024 | Reasoning models o1 / Open-source ecosystem boom |
+| 2025 | Agent and multimodal convergence |
+
+## Core Concepts
+
+### What is a Language Model?
+
+The core task of a language model is to predict the probability of the next token in a sequence: P(xt | x1, x2, ..., x(t-1))
+
+### Emergent Abilities
+
+When model scale exceeds certain thresholds, abilities not explicitly included in the training objective emerge:
+
+- In-Context Learning
+- Chain-of-Thought Reasoning
+- Instruction Following
+
+### Scaling Laws
+
+There is a power-law relationship between model performance and compute, data size, and parameter count. This means that with limited resources, you need to allocate compute, data, and parameter budgets wisely.
+
+## Mainstream Model Categories
+
+| Type | Representative | Characteristics |
+|------|------|------|
+| Closed-source | GPT-4, Claude, Gemini | High capability, API access |
+| Open-source | LLaMA, Mistral, Qwen | Local deployment, customizable |
+| Code | Codex, CodeLlama | Code generation and understanding |
+| Multimodal | GPT-4V, LLaVA | Mixed image-text understanding |
+
+## Section Navigation
+
+- [Transformer Architecture](./architecture) — Attention mechanism and model structure
+- [Pre-training & Fine-tuning](./training) — How to train and align a large language model
+- [Mainstream Models](./models) — Details on GPT, LLaMA, Mistral, and more
+- [Inference Optimization](./inference) — Quantization, KV Cache, inference acceleration
+- [Prompt Engineering](./prompt-engineering) — Core techniques for designing effective prompts
+- [RAG](./rag) — Let LLMs answer questions based on external knowledge
+- [AI Agent](./ai-agent) — Building autonomous intelligent agents
+- [Application Framework](./application-framework) — LangChain, vector databases, and the development ecosystem

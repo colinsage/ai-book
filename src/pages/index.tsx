@@ -5,6 +5,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Heading from '@theme/Heading';
+import {translate} from '@docusaurus/Translate';
 
 import styles from './index.module.css';
 
@@ -21,22 +22,22 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/llm/overview">
-            大语言模型
+            {translate({message: '大语言模型'})}
           </Link>
           <Link
             className="button button--secondary button--lg"
             to="/docs/llama-cpp/index">
-            Llama.cpp 实现原理
+            {translate({message: 'Llama.cpp 实现原理'})}
           </Link>
           <Link
             className="button button--secondary button--lg"
             to="/docs/sglang/index">
-            SGLang 实现原理
+            {translate({message: 'SGLang 实现原理'})}
           </Link>
           <Link
             className="button button--secondary button--lg"
             to="/docs/vllm/index">
-            vLLM 实现原理
+            {translate({message: 'vLLM 实现原理'})}
           </Link>
         </div>
       </div>
@@ -48,8 +49,8 @@ export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`欢迎来到 ${siteConfig.title}`}
-      description="从基础到实践，系统掌握人工智能 — 涵盖大语言模型原理、提示工程、AI应用开发与LLM推理引擎源码分析">
+      title={translate({message: '欢迎来到 AI Book'})}
+      description={translate({message: '从基础到实践，系统掌握人工智能 — 涵盖大语言模型原理、提示工程、AI应用开发与LLM推理引擎源码分析'})}>
       <HomepageHeader />
       <main>
         <HomepageFeatures />

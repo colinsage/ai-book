@@ -1,0 +1,122 @@
+---
+title: Pre-training & Fine-tuning
+sidebar_position: 3
+---
+
+# Pre-training & Fine-tuning
+
+Training large language models is typically divided into pre-training and fine-tuning stages, each with different objectives and methods. Understanding the training process also relies on general knowledge of model evaluation and data processing.
+
+## Pre-training
+
+Pre-training lets the model learn general language patterns from massive amounts of unlabeled text.
+
+### Training Objective
+
+**Next Token Prediction**:
+
+L = -Σ(t=1..T) log P(x_t | x{'<t'} ; θ)
+
+This is the standard training objective for autoregressive language models; the GPT series all use this approach.
+
+### Data Preparation
+
+- **Data scale**: Typically TB-level text
+- **Data sources**: Web pages (Common Crawl), books, code, papers
+- **Data cleaning**: Deduplication, filtering low-quality content, removing sensitive information
+
+LLM data preparation is essentially large-scale feature engineering: how to filter high-quality text from massive raw data, construct reasonable tokenization schemes, and design data mix ratios directly determines the model's upper bound.
+
+### Training Infrastructure
+
+- **Hardware**: Thousands of GPUs/TPUs, e.g., A100/H100 clusters
+- **Parallelism strategies**: Data parallelism, tensor parallelism, pipeline parallelism
+- **Mixed precision training**: BF16/FP16 acceleration
+
+## Fine-tuning
+
+Fine-tuning adapts a pre-trained model to specific tasks or domains.
+
+### Full-Parameter Fine-tuning
+
+Updates all model parameters; best results but highest cost.
+
+### Parameter-Efficient Fine-tuning (PEFT)
+
+Updates only a small number of parameters, drastically reducing training costs:
+
+#### LoRA
+
+Low-Rank Adaptation reduces trainable parameters by adding low-rank decompositions alongside weight matrices:
+
+W' = W + ΔW = W + BA
+
+Where B ∈ ℝ^(d×r), A ∈ ℝ^(r×d), r ≪ d.
+
+```python
+from peft import LoraConfig, get_peft_model
+
+config = LoraConfig(
+    r=8,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
+    task_type="CAUSAL_LM",
+)
+model = get_peft_model(base_model, config)
+```
+
+#### QLoRA
+
+On top of LoRA, quantizes the base model to 4-bit, further reducing VRAM requirements. A single GPU can fine-tune a 65B model.
+
+### RLHF / DPO
+
+Aligning model outputs through human feedback:
+
+- **RLHF**: Train a reward model + PPO optimization
+- **DPO**: Direct Preference Optimization, no reward model needed; simpler and more efficient
+
+## Model Evaluation
+
+Model evaluation runs through the entire LLM training process, from pre-training loss monitoring to post-fine-tuning capability assessment.
+
+### General Evaluation Methods
+
+| Stage | Evaluation Method | Key Metrics |
+|------|---------|---------|
+| Pre-training | Validation loss / Perplexity | Perplexity |
+| SFT | Human evaluation / Automatic metrics | Accuracy, BLEU, ROUGE |
+| RLHF | Reward model score | Reward value, Win rate |
+| Final | Benchmark | MMLU, HumanEval, MT-Bench |
+
+### Classic Evaluation Concepts
+
+- **Cross-validation**: K-fold cross-validation makes better use of limited data
+- **Hyperparameter tuning**: Learning rate, batch size, LoRA rank, etc. all require systematic search
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {'C': [0.1, 1, 10], 'kernel': ['linear', 'rbf']}
+grid_search = GridSearchCV(SVC(), param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+```
+
+### LLM Evaluation Benchmarks
+
+| Benchmark | Capabilities Evaluated |
+|------|---------|
+| MMLU | Multi-subject knowledge |
+| HumanEval | Code generation |
+| GSM8K | Mathematical reasoning |
+| MT-Bench | Multi-turn dialogue |
+| AlpacaEval | Instruction following |
+
+## Data & Features
+
+Data engineering in LLM training is feature engineering at scale:
+
+- **Data cleaning** = Feature quality assurance: deduplication, filtering, quality scoring
+- **Tokenization** = Feature encoding: BPE / SentencePiece converts text into model-processable sequences
+- **Data mix ratio** = Feature selection: mixing ratios of different domain data affect model capability distribution
+- **Instruction data construction** = Feature construction: SFT data format design and quality determine fine-tuning effectiveness

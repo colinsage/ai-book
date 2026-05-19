@@ -1,0 +1,190 @@
+---
+title: Application Development Framework
+sidebar_position: 9
+---
+
+# Application Development Framework
+
+LLM application development has a rich ecosystem of tools and frameworks. This chapter introduces mainstream development frameworks, model deployment solutions, and evaluation tools.
+
+## Model Access
+
+### Cloud APIs
+
+| Service | Models | Highlights | Pricing |
+|------|------|------|------|
+| OpenAI | GPT-4o / o1 | Strongest overall capability | Pay per token |
+| Anthropic | Claude 3.5 | Long context, safety | Pay per token |
+| Google | Gemini | Multimodal, ecosystem integration | Pay per token |
+| Chinese providers | Qwen/DeepSeek/GLM | Strong Chinese capabilities, compliance | Pay per token |
+
+### Open-Source Model Deployment
+
+| Tool | Highlights | Use Cases |
+|------|------|---------|
+| vLLM | High throughput, PagedAttention | Production environments |
+| Ollama | Out-of-the-box | Local development |
+| llama.cpp | CPU-friendly | Resource-constrained environments |
+| Hugging Face TGI | Official inference engine | Flexible deployment |
+
+## LangChain
+
+LangChain is the most popular LLM application development framework, providing modular components and rich integrations.
+
+### Core Modules
+
+| Module | Function |
+|------|------|
+| Model I/O | Prompts / LLMs / Output Parsers |
+| Retrieval | Document Loaders / Splitters / Embeddings / Vector Stores |
+| Chains | Component chaining and orchestration |
+| Agents | Tool calling and autonomous decision-making |
+| Memory | Conversation memory management |
+
+### Quick Start
+
+```bash
+pip install langchain langchain-openai langchain-community
+```
+
+```python
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a {role}, answer questions in English."),
+    ("human", "{input}"),
+])
+
+chain = prompt | llm | StrOutputParser()
+
+response = chain.invoke({"role": "AI tutorial writer", "input": "What is RAG?"})
+```
+
+### LCEL (LangChain Expression Language)
+
+LCEL uses the `|` operator to chain components together:
+
+```python
+chain = prompt | llm | output_parser
+```
+
+Parallel execution and streaming output:
+
+```python
+from langchain_core.runnables import RunnableParallel
+
+chain = RunnableParallel({
+    "joke": joke_chain,
+    "poem": poem_chain,
+})
+
+for chunk in chain.stream({"input": "Hello"}):
+    print(chunk, end="", flush=True)
+```
+
+### Tools & Agents
+
+```python
+from langchain_core.tools import tool
+
+@tool
+def search_web(query: str) -> str:
+    """Search the web for information"""
+    return search_engine.search(query)
+
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+
+agent = create_tool_calling_agent(llm, [search_web], prompt)
+agent_executor = AgentExecutor(agent=agent, tools=[search_web])
+
+result = agent_executor.invoke({"input": "What's the weather in Beijing today?"})
+```
+
+### LangGraph
+
+LangGraph is a LangChain extension for building stateful, multi-actor AI applications with support for cycles, branching, and persistent state:
+
+```python
+from langgraph.graph import StateGraph, END
+
+workflow = StateGraph(AgentState)
+workflow.add_node("think", think_node)
+workflow.add_node("act", act_node)
+workflow.add_node("observe", observe_node)
+
+workflow.add_edge("think", "act")
+workflow.add_edge("act", "observe")
+workflow.add_conditional_edges("observe", should_continue, {
+    True: "think", False: END,
+})
+```
+
+## Vector Databases
+
+| Database | Type | Highlights |
+|--------|------|------|
+| Chroma | Embedded | Lightweight, good for development |
+| FAISS | In-memory | Open-sourced by Meta, high performance |
+| Pinecone | Cloud service | Fully managed, easy to scale |
+| Milvus | Distributed | Large-scale production environments |
+| Qdrant | Rust-based | High performance, filtered queries |
+| Weaviate | Full-featured | Hybrid search |
+
+## Other Development Frameworks
+
+| Framework | Language | Highlights |
+|------|------|------|
+| LlamaIndex | Python | Focused on data indexing and retrieval |
+| CrewAI | Python | Multi-Agent framework |
+| AutoGen | Python | Microsoft open-source, multi-Agent dialogue |
+| Semantic Kernel | C#/Python/Java | Microsoft enterprise-grade framework |
+| Dify | - | Low-code AI application platform |
+
+## Observability & Evaluation
+
+### LangSmith
+
+LangChain's official observability platform; once enabled, all chain executions are automatically traced:
+
+```python
+import os
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = "your-api-key"
+```
+
+Other tools: **Langfuse** (open-source), **Phoenix (Arize)**, **Weights & Biases Weave**
+
+### Evaluation Frameworks
+
+**RAGAS** — Automated RAG system evaluation:
+
+```python
+from ragas import evaluate
+from ragas.metrics import faithfulness, answer_relevancy
+
+result = evaluate(
+    dataset=eval_dataset,
+    metrics=[faithfulness, answer_relevancy],
+)
+```
+
+**DeepEval** — Unit-test style LLM evaluation:
+
+```python
+from deepeval import assert_test
+from deepeval.metrics import HallucinationMetric
+
+metric = HallucinationMetric(threshold=0.5)
+assert_test(test_case, [metric])
+```
+
+## Learning Resources
+
+- [LangChain Docs](https://python.langchain.com/)
+- [LlamaIndex Docs](https://docs.llamaindex.ai/)
+- [OpenAI Cookbook](https://cookbook.openai.com/)
+- [Hugging Face Course](https://huggingface.co/learn)

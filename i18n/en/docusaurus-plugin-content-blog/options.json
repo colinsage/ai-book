@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "AI News",
+    "description": "The title for the blog used in SEO"
+  },
+  "description": {
+    "message": "Latest trends and insights in artificial intelligence",
+    "description": "The description for the blog used in SEO"
+  },
+  "sidebar.title": {
+    "message": "Recent posts",
+    "description": "The label for the left sidebar"
+  }
+}

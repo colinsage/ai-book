@@ -1,0 +1,142 @@
+---
+title: Prompt Engineering
+sidebar_position: 6
+---
+
+# Prompt Engineering
+
+Prompt Engineering is the technique of designing and optimizing input prompts for large language models to guide them toward more accurate and useful outputs. In the LLM era, **prompting is programming**.
+
+## Basic Principles
+
+### 1. Be Clear and Specific
+
+❌ "Tell me about AI"
+
+✅ "In 3-5 bullet points, explain the 3 most important technological breakthroughs in artificial intelligence in 2024. Each breakthrough should include: name, brief principle description, and a real-world application case"
+
+### 2. Provide Context
+
+Tell the model its role, target audience, and output format.
+
+### 3. Give Examples
+
+Demonstrating the desired input-output pattern through examples is more effective than text description alone.
+
+### 4. Step-by-Step Reasoning
+
+For complex tasks, guide the model to think through steps rather than jumping to an answer.
+
+### 5. Constraints and Negation
+
+Telling the model what **not** to do is as important as telling it what to do:
+
+```
+Explain quantum computing in under 200 words, with the following constraints:
+- Do not use mathematical formulas
+- Do not use filler phrases like "simply put"
+- Target audience: high school students
+```
+
+## Core Techniques
+
+### Zero-shot Prompting
+
+Give the instruction directly without examples:
+
+```
+Classify the following text as positive, neutral, or negative sentiment:
+
+Text: This product's user experience is very smooth, but the price is too high.
+Sentiment:
+```
+
+### Few-shot Prompting
+
+Provide a few examples to help the model understand the task pattern:
+
+```
+Classify reviews as positive or negative:
+
+Review: Great service attitude → Positive
+Review: Wait time was too long → Negative
+Review: Food tasted good but the atmosphere was mediocre →
+```
+
+Example quantity and selection strategies:
+
+| Type | # of Examples | Use Cases |
+|------|--------|---------|
+| Zero-shot | 0 | Simple tasks |
+| One-shot | 1 | Formatting tasks |
+| Few-shot | 2-5 | Complex pattern learning |
+
+**Example selection strategy**: Prefer examples semantically similar to the current input (based on embedding retrieval); ensure examples cover different pattern types; arrange from simple to complex.
+
+### Role Playing
+
+Assign the model a professional role for more expert output:
+
+```
+You are a senior machine learning engineer who excels at explaining complex concepts to beginners.
+Please explain what the gradient descent algorithm is, using a real-life analogy.
+```
+
+### Output Format Control
+
+Explicitly specify the output format for programmatic parsing:
+
+```
+Analyze the time complexity of the following code, output in this JSON format:
+{
+  "complexity": "O(?)",
+  "explanation": "One-sentence explanation",
+  "bottleneck": "The bottleneck line"
+}
+```
+
+## Chain-of-Thought Reasoning
+
+CoT enables the model to solve complex problems through step-by-step reasoning rather than guessing the answer directly.
+
+### Basic Usage
+
+**Implicit trigger** — Add "Let's think step by step" at the end of the prompt:
+
+```
+If小明 has 5 apples, gives 2 to小红, and buys 3 more, how many apples does小明 have now?
+
+Let's think step by step.
+```
+
+**Explicit examples** — Provide examples with reasoning processes:
+
+```
+Q: A parking lot has 3 cars, 2 more arrive, 1 leaves. How many remain?
+A: The lot originally had 3 cars. 2 more arrived, so 3 + 2 = 5. 1 left, so 5 - 1 = 4. The answer is 4.
+
+Q: A library has 15 books, 8 are borrowed, 3 are returned. How many remain?
+A:
+```
+
+### Advanced Variants
+
+- **Self-Consistency**: Sample multiple reasoning paths and take the majority vote
+- **Auto-CoT**: Let the model automatically generate reasoning examples, eliminating manual writing
+- **Tree-of-Thought (ToT)**: Organize reasoning as a tree structure, allowing exploration and backtracking
+
+CoT is particularly effective for mathematical reasoning, logical reasoning, and multi-step planning. Note that CoT increases output token count; simple tasks do not require it.
+
+## Prompting vs Fine-tuning
+
+| Dimension | Prompt Engineering | Fine-tuning |
+|------|---------|------|
+| Cost | Low (inference only) | High (requires training) |
+| Flexibility | High (modify anytime) | Low (requires retraining) |
+| Performance ceiling | Medium | High |
+| Knowledge update | Real-time | Requires retraining |
+| Use cases | Rapid prototyping, general tasks | Specialized domains, peak performance |
+
+## Iterative Optimization
+
+Prompt engineering is an iterative process: write initial prompt → evaluate output → analyze shortcomings → modify prompt → repeat until satisfied.

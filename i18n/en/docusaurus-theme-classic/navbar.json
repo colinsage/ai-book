@@ -1,0 +1,30 @@
+{
+  "title": {
+    "message": "AI Book",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "AI Book Logo",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.大语言模型": {
+    "message": "Large Language Models",
+    "description": "Navbar item with label 大语言模型"
+  },
+  "item.label.Llama.cpp实现原理": {
+    "message": "Llama.cpp Internals",
+    "description": "Navbar item with label Llama.cpp实现原理"
+  },
+  "item.label.SGLang实现原理": {
+    "message": "SGLang Internals",
+    "description": "Navbar item with label SGLang实现原理"
+  },
+  "item.label.vLLM实现原理": {
+    "message": "vLLM Internals",
+    "description": "Navbar item with label vLLM实现原理"
+  },
+  "item.label.AI 动态": {
+    "message": "AI News",
+    "description": "Navbar item with label AI 动态"
+  }
+}

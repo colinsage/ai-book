@@ -1,0 +1,42 @@
+{
+  "link.title.知识库": {
+    "message": "Knowledge Base",
+    "description": "The title of the footer links column with title=知识库 in the footer"
+  },
+  "link.title.社区": {
+    "message": "Community",
+    "description": "The title of the footer links column with title=社区 in the footer"
+  },
+  "link.title.更多": {
+    "message": "More",
+    "description": "The title of the footer links column with title=更多 in the footer"
+  },
+  "link.item.label.大语言模型": {
+    "message": "Large Language Models",
+    "description": "The label of footer link with label=大语言模型 linking to /docs/llm/overview"
+  },
+  "link.item.label.Llama.cpp实现原理": {
+    "message": "Llama.cpp Internals",
+    "description": "The label of footer link with label=Llama.cpp实现原理 linking to /docs/llama-cpp/index"
+  },
+  "link.item.label.SGLang实现原理": {
+    "message": "SGLang Internals",
+    "description": "The label of footer link with label=SGLang实现原理 linking to /docs/sglang/index"
+  },
+  "link.item.label.vLLM实现原理": {
+    "message": "vLLM Internals",
+    "description": "The label of footer link with label=vLLM实现原理 linking to /docs/vllm/index"
+  },
+  "link.item.label.AI 动态": {
+    "message": "AI News",
+    "description": "The label of footer link with label=AI 动态 linking to /blog"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/your-org/ai-book"
+  },
+  "copyright": {
+    "message": "Copyright © 2026 AI Book. Built with Docusaurus.",
+    "description": "The footer copyright"
+  }
+}
