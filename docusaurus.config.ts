@@ -134,7 +134,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/your-org/ai-book',
+              href: 'https://github.com/colinsage/ai-book',
             },
           ],
         },
